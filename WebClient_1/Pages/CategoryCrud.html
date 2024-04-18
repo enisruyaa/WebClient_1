@@ -33,6 +33,9 @@
 
                 <input type="button" id="btnUpdate" class="btn btn-warning" value="Kategori Güncelle" />
 
+                <hr />
+
+                <input type="text" id="txtSearch" placeholder="Arama yapınız" />
 
 
             </div>
@@ -52,63 +55,196 @@
         </div>
     </div>
 
+
     <!-- Ulaşmak istediğimiz API url'i => http://localhost:53087/api/Category  -->
 
-    <script>
 
-        // Bu Fonksiyonumuz Table'imizdaki ilk tr dışındaki tr'leri temizliyor...
+    <script>
+        //Bu fonksiyonumuz Table'imizdeki ilk tr dısındaki tüm tr'leri temizliyor...
 
         function ControlHeader() {
-            // Jquery kullanma sembolü $ sembolüdür.. Biz bu sembolü kullandığımız ana JQuery kullanığımzı belirtiyoruz.
+            //Jquery kullanma sembolü $ sembolüdür...Biz bu sembolü kullandıgımız anda Jquery kullandıgımızı belirtiyoruz...
 
-            $("#tab1").find("tr:gt(0)").remove(); // Burada tr:gt(0) ifadesi : "Table row index must be greater then zero" demektir tr'sinin index'i 0'dan büyük olan tüm tr'leri bul ve sil anlamına gelir.
+            $("#tab1").find("tr:gt(0)").remove(); //burada tr:gt(0) ifadesi :"Table row index must be greater than zero" demektir ki tr'sinin index'i 0'dan büyük olan tüm tr'leri bul ve sil anlamına gelir...
         }
 
-        // Bu fonksiyonumuz API'ya gidip veri aldığımız zaman elimize geçen o verileri buradaki tablomuzun temizlenmiş olan body'sine entegre edecek.
+
+
+        //Bu fonksiyonumuz API'ya gidip veri aldıgımız zaman elimize gecen o verileri buradaki tablomuzun temizlenmiş olan body'sine entegre edecek...
 
         function BringDataList(dataList) {
             ControlHeader();
 
-            // JavaScript'te her eylem bir fonksiyondur.. Anlık eylemler ise Anonymus Function'lar olarak açılır.
+            //JavaScript'te her eylem bir fonksiyondur...Anlık eylemler ise Anonymus Function'lar olarak acılır...
 
             $.each(dataList, function (key, data) {
+                $("#tab1").append("<tr> <td> " + data.ID + " </td>  <td> " + data.Name + " </td> <td> " + data.Description + " </td>  <td> <button class='btn btn-warning' id='btnUpdate" + key + "' data-id='" + data.ID + "' value='update'> Güncelle </button> </td> <td><button class='btn btn-danger' id='btnDelete" + key + "' data-id='" + data.ID + "' value='delete'> Sil </button> </td>  <td> <button class='btn btn-primary' id='btnSelect" + key + "' data-id='" + data.ID + "' value='select'> Sec </button> </td> </tr>");
+            });
 
-                $("#tab1").append("<tr> <td> " + data.ID + " </td>  <td> " + data.Name + " </td> <td> " + data.Description + " </td>  <td> <button class='btn btn-success' id='btnUpdate" + key + "' data-id='" + data.ID + "' value='update'> Güncelle </button> </td> <td><button class='btn btn-danger' id='btnDelete" + key + "' data-id='" + data.ID + "' value='delete'> Sil </button> </td>  <td> <button class='btn btn-primary' id='btnSelect" + key + "' data-id='" + data.ID + "' value='select'> Sec </button> </td> </tr>");
-            })
         }
 
-        // Bu Fonksiyonumuzun amacı API'ya gittiğimiz zaman aldığımız tekil veriyi tasarımda tablomuzun içerisine entegre etmektir..
-
+        //Bu fonksiyonumuzun amacı API'ya gittigimiz zaman aldıgımız tekil veriyi tasarımda tablomuzun icerisine entegre etmektir...
         function BringData(data) {
             ControlHeader();
-            $("#tab1").append("<tr> <td> " + data.ID + " </td>  <td> " + data.Name + " </td> <td> " + data.Description + " </td>  <td> <button class='btn btn-success' id='btnUpdate" + key + "' data-id='" + data.ID + "' value='update'> Güncelle </button> </td> <td><button class='btn btn-danger' id='btnDelete" + key + "' data-id='" + data.ID + "' value='delete'> Sil </button> </td>  <td> <button class='btn btn-primary' id='btnSelect" + key + "' data-id='" + data.ID + "' value='select'> Sec </button> </td> </tr>");
+            $("#tab1").append("<tr> <td> " + data.ID + " </td>  <td> " + data.Name + " </td> <td> " + data.Description + " </td>  <td> <button class='btn btn-warning' id='btnUpdate" + data.ID + "' data-id='" + data.ID + "' value='update'> Güncelle </button> </td> <td><button class='btn btn-danger' id='btnDelete" + data.ID + "' data-id='" + data.ID + "' value='delete'> Sil </button> </td>  <td> <button class='btn btn-primary' id='btnSelect" + data.ID + "' data-id='" + data.ID + "' value='select'> Sec </button> </td> </tr>");
         }
 
         function FetchData(data) {
-            $("#txtID").val(data.ID); // val value'den gelir ilgili yapının içeriğindeki değer demektir.
+            $("#txtID").val(data.ID); //val value'dan gelir ilgili yapının icerigindeki deger demektir...
             $("#txtName").val(data.Name);
             $("#txtDesc").val(data.Description);
         }
 
-        $(function() {
 
-            // Kategorileri Listelemek
 
-            $("#btnAll").click(function() {
-                // API'ya ulaşmak için Jquery'nin AJAX metodunu kullanırsınız.. Açılımı Asnycronous JavaScript and XML olan AJAX , sayfanızın görünüründe loading yapamdan değişmesini sağlar.. Buunun yanında API'ya ulaşmak için en rahat yöntemlerden biridir.
+        $(function () {
+
+
+
+            //Kategorileri listelemek
+
+            $("#btnAll").click(function () {
+
+                //API'ya ulasmak icin Jquery'nin AJAX metodunu kullanırsınız...Acılımı Asnycronous JavaScript and XML olan AJAX , sayfanızın görünürde loading yapmadan degişmesini saglar...Bunun yanında API'ya ulasmak icin en rahat yöntemlerden biridir...
 
                 $.ajax({
+
                     url: "http://localhost:53087/api/Category/GetCategories",
                     type: "Get",
                     success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+
+                });
+
+
+            })
+
+
+            //Kategori Getir
+
+
+            $("#btnID").click(function () {
+                $.ajax({
+                    url: " http://localhost:53087/api/Category/GetCategory", //Burada dilerseniz data parametresinde Json verisi göndermek yerine URL'e direkt /"+$("#txtID").val() yazılabilir...Ama eger böyle yapacaksanız sakın GetCategory'den sonra slash koymayı unutmayın...Ve bir de bu ancak gitmek istediginiz Action parametresinin ismi RouteMap'inize uyuyorsa gecerlidir...Baska bir parametre ismi varsa bunun icin QueryString yöntemi kullanmak gerekir...
+                    data: { id: $("#txtID").val() },
+                    type: "Get",
+                    success: function (kategori) {
+                        BringData(kategori);
+                    }
+
+                })
+            })
+
+
+            //Kategori Ekle
+            $("#btnAdd").click(function () {
+                $.ajax({
+                    url: " http://localhost:53087/api/Category/AddCategory",
+                    type: "Post",
+                    data: { Name: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+                })
+            })
+
+
+            //Kategori Sil
+
+            //Siz Delete tipinde bir request yaptıgınız zaman data ile veri gönderemezsiniz...
+
+            $("#btnDelete").click(function () {
+                $.ajax({
+                    url: "http://localhost:53087/api/Category/DeleteCategory/" + $("#txtID").val(),
+                    type: "Delete",
+                    success: function (kategoriler) {
                         BringDataList(kategoriler)
                     }
-                });
+
+                })
+            })
+
+
+            //Kategori Güncelleme
+
+            $("#btnUpdate").click(function () {
+                $.ajax({
+                    url: "http://localhost:53087/api/Category/UpdateCategory",
+                    type: "Put",
+                    data: { ID: $("#txtID").val(), Name: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+
+                })
+
+            })
+
+            //Kategori Ara
+
+            $("#txtSearch").keyup(function () {
+                $.ajax({
+                    url: "http://localhost:53087/api/Category/SearchCategory",
+                    type: "Get",
+                    data: { item: $(this).val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+                })
+            })
+
+            //JS EventHandling
+
+            //on fonksiyonu sırasıyla su argümanları bekler:
+            //1 => event handling hangi yapı üzerinde yapılacak
+            //2 => bu yapı icerisinde kime müdahale edildiginde gerceklesecek
+            //3 => Bu eventhandling'de ne eylemi yapılacak
+
+            //Update
+
+            $("#tab1").on("click", "[value=update]", function () {
+
+                $.ajax({
+                    url: "http://localhost:53568/api/Category/UpdateCategory",
+                    type: "Put",
+                    data: { ID: $(this).attr("data-id"), Name: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+                })
+
+            })
+
+            //Delete
+            $("#tab1").on("click", "[value=delete]", function () {
+                $.ajax({
+                    url: "http://localhost:53087/api/Category/DeleteCategory/" + $(this).attr("data-id"),
+                    type: "Delete",
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+                })
+            })
+
+
+            //Select
+
+            $("#tab1").on("click", "[value=select]", function () {
+
+                $.ajax({
+                    url: "http://localhost:53087/api/Category/GetCategory/" + $(this).attr("data-id"),
+                    type: "Get",
+                    success: function (kategori) {
+                        FetchData(kategori);
+                    }
+                })
             })
 
         })
 
     </script>
+
 
 </body>
 </html>
